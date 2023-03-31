@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GestionVentesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="dbVentesConext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Utilisateurs" EntityType="GestionVentesModel.Utilisateur" />
+    <EntitySet Name="categories" EntityType="GestionVentesModel.categorie" />
+    <EntitySet Name="clients" EntityType="GestionVentesModel.client" />
+    <EntitySet Name="commandes" EntityType="GestionVentesModel.commande" />
+    <EntitySet Name="departements" EntityType="GestionVentesModel.departement" />
+    <EntitySet Name="detailsCommandes" EntityType="GestionVentesModel.detailsCommande" />
+    <EntitySet Name="factures" EntityType="GestionVentesModel.facture" />
+    <EntitySet Name="paiements" EntityType="GestionVentesModel.paiement" />
+    <EntitySet Name="produits" EntityType="GestionVentesModel.produit" />
+    <AssociationSet Name="FK_Categorie_Departement" Association="GestionVentesModel.FK_Categorie_Departement">
+      <End Role="departement" EntitySet="departements" />
+      <End Role="categorie" EntitySet="categories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Produit_Categorie" Association="GestionVentesModel.FK_Produit_Categorie">
+      <End Role="categorie" EntitySet="categories" />
+      <End Role="produit" EntitySet="produits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Commande_Client" Association="GestionVentesModel.FK_Commande_Client">
+      <End Role="client" EntitySet="clients" />
+      <End Role="commande" EntitySet="commandes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Commande_Facture" Association="GestionVentesModel.FK_Commande_Facture">
+      <End Role="facture" EntitySet="factures" />
+      <End Role="commande" EntitySet="commandes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Commande_Paiement" Association="GestionVentesModel.FK_Commande_Paiement">
+      <End Role="paiement" EntitySet="paiements" />
+      <End Role="commande" EntitySet="commandes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_detailsCommandes_Commande" Association="GestionVentesModel.FK_detailsCommandes_Commande">
+      <End Role="commande" EntitySet="commandes" />
+      <End Role="detailsCommande" EntitySet="detailsCommandes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_detailsCommandes_Produit" Association="GestionVentesModel.FK_detailsCommandes_Produit">
+      <End Role="produit" EntitySet="produits" />
+      <End Role="detailsCommande" EntitySet="detailsCommandes" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Utilisateur">
+    <Key>
+      <PropertyRef Name="numUtilisateur" />
+    </Key>
+    <Property Name="numUtilisateur" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nomUtilisateur" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="mdpUtilisateur" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="role" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="categorie">
+    <Key>
+      <PropertyRef Name="numCategorie" />
+    </Key>
+    <Property Name="numCategorie" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nomCategorie" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="numDepartement" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="departement" Relationship="GestionVentesModel.FK_Categorie_Departement" FromRole="categorie" ToRole="departement" />
+    <NavigationProperty Name="produits" Relationship="GestionVentesModel.FK_Produit_Categorie" FromRole="categorie" ToRole="produit" />
+  </EntityType>
+  <EntityType Name="client">
+    <Key>
+      <PropertyRef Name="numClient" />
+    </Key>
+    <Property Name="numClient" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nomClient" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="prenomClient" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="adresseClient" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="villeClient" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="paysClient" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="emailClient" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="teleClient" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="commandes" Relationship="GestionVentesModel.FK_Commande_Client" FromRole="client" ToRole="commande" />
+  </EntityType>
+  <EntityType Name="commande">
+    <Key>
+      <PropertyRef Name="numCommande" />
+    </Key>
+    <Property Name="numCommande" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="dateCommande" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Etat" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="numClient" Type="Int32" Nullable="false" />
+    <Property Name="numFacture" Type="Int32" Nullable="false" />
+    <Property Name="numPaiement" Type="Int32" Nullable="false" />
+    <Property Name="Total_HT" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="TVA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Total_TTC" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="client" Relationship="GestionVentesModel.FK_Commande_Client" FromRole="commande" ToRole="client" />
+    <NavigationProperty Name="facture" Relationship="GestionVentesModel.FK_Commande_Facture" FromRole="commande" ToRole="facture" />
+    <NavigationProperty Name="paiement" Relationship="GestionVentesModel.FK_Commande_Paiement" FromRole="commande" ToRole="paiement" />
+    <NavigationProperty Name="detailsCommandes" Relationship="GestionVentesModel.FK_detailsCommandes_Commande" FromRole="commande" ToRole="detailsCommande" />
+  </EntityType>
+  <EntityType Name="departement">
+    <Key>
+      <PropertyRef Name="numDepartement" />
+    </Key>
+    <Property Name="numDepartement" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nomDepartement" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="categories" Relationship="GestionVentesModel.FK_Categorie_Departement" FromRole="departement" ToRole="categorie" />
+  </EntityType>
+  <EntityType Name="detailsCommande">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="numCommande" Type="Int32" Nullable="false" />
+    <Property Name="numProduit" Type="Int32" Nullable="false" />
+    <Property Name="Prix" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Remise" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Total" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="nomProduit" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="qte" Type="Int32" />
+    <NavigationProperty Name="commande" Relationship="GestionVentesModel.FK_detailsCommandes_Commande" FromRole="detailsCommande" ToRole="commande" />
+    <NavigationProperty Name="produit" Relationship="GestionVentesModel.FK_detailsCommandes_Produit" FromRole="detailsCommande" ToRole="produit" />
+  </EntityType>
+  <EntityType Name="facture">
+    <Key>
+      <PropertyRef Name="numFacture" />
+    </Key>
+    <Property Name="numFacture" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="dateFacture" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="commandes" Relationship="GestionVentesModel.FK_Commande_Facture" FromRole="facture" ToRole="commande" />
+  </EntityType>
+  <EntityType Name="paiement">
+    <Key>
+      <PropertyRef Name="numPaiement" />
+    </Key>
+    <Property Name="numPaiement" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="datePaiement" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="montantPayé" Type="Int32" Nullable="false" />
+    <Property Name="montantàPayer" Type="Int32" Nullable="false" />
+    <Property Name="montantRestant" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="commandes" Relationship="GestionVentesModel.FK_Commande_Paiement" FromRole="paiement" ToRole="commande" />
+  </EntityType>
+  <EntityType Name="produit">
+    <Key>
+      <PropertyRef Name="numProduit" />
+    </Key>
+    <Property Name="numProduit" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nomProduit" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="qteStock" Type="Int32" Nullable="false" />
+    <Property Name="prixProduit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="imageProduit" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+    <Property Name="numCategorie" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="categorie" Relationship="GestionVentesModel.FK_Produit_Categorie" FromRole="produit" ToRole="categorie" />
+    <NavigationProperty Name="detailsCommandes" Relationship="GestionVentesModel.FK_detailsCommandes_Produit" FromRole="produit" ToRole="detailsCommande" />
+  </EntityType>
+  <Association Name="FK_Categorie_Departement">
+    <End Type="GestionVentesModel.departement" Role="departement" Multiplicity="1" />
+    <End Type="GestionVentesModel.categorie" Role="categorie" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="departement">
+        <PropertyRef Name="numDepartement" />
+      </Principal>
+      <Dependent Role="categorie">
+        <PropertyRef Name="numDepartement" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Produit_Categorie">
+    <End Type="GestionVentesModel.categorie" Role="categorie" Multiplicity="1" />
+    <End Type="GestionVentesModel.produit" Role="produit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="categorie">
+        <PropertyRef Name="numCategorie" />
+      </Principal>
+      <Dependent Role="produit">
+        <PropertyRef Name="numCategorie" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Commande_Client">
+    <End Type="GestionVentesModel.client" Role="client" Multiplicity="1" />
+    <End Type="GestionVentesModel.commande" Role="commande" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="client">
+        <PropertyRef Name="numClient" />
+      </Principal>
+      <Dependent Role="commande">
+        <PropertyRef Name="numClient" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Commande_Facture">
+    <End Type="GestionVentesModel.facture" Role="facture" Multiplicity="1" />
+    <End Type="GestionVentesModel.commande" Role="commande" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="facture">
+        <PropertyRef Name="numFacture" />
+      </Principal>
+      <Dependent Role="commande">
+        <PropertyRef Name="numFacture" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Commande_Paiement">
+    <End Type="GestionVentesModel.paiement" Role="paiement" Multiplicity="1" />
+    <End Type="GestionVentesModel.commande" Role="commande" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="paiement">
+        <PropertyRef Name="numPaiement" />
+      </Principal>
+      <Dependent Role="commande">
+        <PropertyRef Name="numPaiement" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_detailsCommandes_Commande">
+    <End Type="GestionVentesModel.commande" Role="commande" Multiplicity="1" />
+    <End Type="GestionVentesModel.detailsCommande" Role="detailsCommande" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="commande">
+        <PropertyRef Name="numCommande" />
+      </Principal>
+      <Dependent Role="detailsCommande">
+        <PropertyRef Name="numCommande" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_detailsCommandes_Produit">
+    <End Type="GestionVentesModel.produit" Role="produit" Multiplicity="1" />
+    <End Type="GestionVentesModel.detailsCommande" Role="detailsCommande" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="produit">
+        <PropertyRef Name="numProduit" />
+      </Principal>
+      <Dependent Role="detailsCommande">
+        <PropertyRef Name="numProduit" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
